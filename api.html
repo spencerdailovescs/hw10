@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		body{
+			text-align: center;	
+		}
+	</style>
+	<meta charset="utf-8"/>
+	<script>
+		function weight() {
+			// Step 1
+			request = new XMLHttpRequest();
+			console.log("1 - request object created");
+ 
+			// Step 2
+ 			var name = document.getElementById("pokemon").value;
+			var url = "https://pokeapi.co/api/v2/pokemon/" + name + "?limit=20&offset=5";
+
+			request.open("GET", url, true);
+
+			console.log("2 - opened request file");
+ 
+			// Step 3
+
+			request.onreadystatechange = function() {
+				console.log("3 - readystatechange event fired.");
+ 
+				if (request.readyState == 4 && request.status == 200) {
+
+					// Step 5
+
+					result = request.responseText;
+					pokemon = JSON.parse(result);
+					var namecap = name.charAt(0).toUpperCase() + name.slice(1)
+					
+					document.getElementById("data").innerHTML = namecap +"'s weight: " + pokemon["weight"] + " pounds"; 
+					
+				}
+				else if (request.readyState == 4 && request.status != 200) {
+
+					document.getElementById("data").innerHTML = "Something is wrong!  Check the logs to see where this went off the rails";
+
+				}
+
+				else if (request.readyState == 3) {
+
+					document.getElementById("data").innerHTML = "Too soon!  Try again";
+
+				}
+
+			}
+		// Step 4
+			request.send();
+			console.log("4 - Request sent");
+		}
+	</script>
+
+</head>
+
+
+<body onload="weight()">
+
+	<h1>Pokemon Weights</h1>
+	
+	<form>
+	<select id = "pokemon">
+  		<option value="bulbasaur">Bulbasaur</option>
+  		<option value="ivysaur">Ivysaur</option>
+  		<option value="venusaur">Venusaur</option>
+  		<option value="charmander">Charmander</option>
+  		<option value="charmeleon">Charmeleon</option>
+  		<option value="charizard">Charizard</option>
+  		<option value="squirtle">Squirtle</option>
+  		<option value="wartortle">Wartortle</option>
+  		<option value="blastoise">Blastoise</option>
+  		<option value="pikachu">Pikachu</option>
+	</select>
+	<button type ="button" onclick="weight()">Check</button>
+	</form>
+	<br>
+	<div id="data">Loading...</div>
+	<br>
+	<p>
+	Utilizes PokeAPI: it contains information about all the pokemon games (items, pokemon, stats, moves, etc) <br>
+	This can be found at https://pokeapi.co/ <br>
+	The options used are limit and offset, which regulates how much info is parsed. By modifying these values, it makes sure that the weight can be found and in a relatively reasonable time. <br>
+	This API is useful to anything Pokemon related. It has literally all information related to Pokemon. Therefore, it can be useful from anything from a Pokemon game guide to a Pokemon trivia website.
+	</p>
+</body>
+</html>
